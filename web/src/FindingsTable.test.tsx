@@ -1,4 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { Finding } from "./api";
 import { FindingsTable } from "./FindingsTable";
@@ -59,5 +60,42 @@ describe("FindingsTable", () => {
     render(<FindingsTable findings={findings} />);
     const row = screen.getByRole("row", { name: /^Update package accepted without a signature check/ });
     expect(within(row).getByText("Not identified")).toBeInTheDocument();
+  });
+
+  it("filters by severity and restores all findings", async () => {
+    const user = userEvent.setup();
+    render(<FindingsTable findings={findings} />);
+    const select = screen.getByRole("combobox", { name: "Severity" });
+
+    expect(select).toHaveValue("all");
+    expect(within(select).getAllByRole("option").map((option) => option.textContent)).toEqual([
+      "All",
+      "Critical",
+      "High",
+      "Medium",
+      "Low",
+    ]);
+    expect(screen.getByRole("status")).toHaveTextContent("Showing 4 of 4 findings");
+
+    await user.selectOptions(select, "critical");
+    expect(screen.getByText("Telnet service enabled by default")).toBeInTheDocument();
+    expect(screen.queryByText("Update package accepted without a signature check")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Showing 1 of 4 findings");
+    expect(select).toHaveFocus();
+
+    await user.selectOptions(select, "all");
+    expect(screen.getByText("Update package accepted without a signature check")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Showing 4 of 4 findings");
+  });
+
+  it("shows an empty row when no findings match", async () => {
+    const user = userEvent.setup();
+    render(<FindingsTable findings={findings} />);
+    const select = screen.getByRole("combobox", { name: "Severity" });
+
+    await user.selectOptions(select, "low");
+
+    expect(screen.getByText("No findings match.")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Showing 0 of 4 findings");
   });
 });
