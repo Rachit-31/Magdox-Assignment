@@ -17,7 +17,7 @@ type Product struct {
 }
 
 func (a *App) handleDebugRows(w http.ResponseWriter, r *http.Request) {
-	rows, err := a.DB.QueryContext(r.Context(), `SELECT id, org_id, name, sku, device_type, created_at FROM products ORDER BY id`)
+	rows, err := a.DB.QueryContext(r.Context(), `SELECT id, org_id, name, sku, device_type, created_at, status FROM products ORDER BY id`)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -30,11 +30,12 @@ func (a *App) handleDebugRows(w http.ResponseWriter, r *http.Request) {
 		SKU        string    `json:"sku"`
 		DeviceType string    `json:"deviceType"`
 		CreatedAt  time.Time `json:"createdAt"`
+		Status     string    `json:"status"`
 	}
 	items := []productRow{}
 	for rows.Next() {
 		var p productRow
-		if err := rows.Scan(&p.ID, &p.OrgID, &p.Name, &p.SKU, &p.DeviceType, &p.CreatedAt); err != nil {
+		if err := rows.Scan(&p.ID, &p.OrgID, &p.Name, &p.SKU, &p.DeviceType, &p.CreatedAt, &p.Status); err != nil {
 			serverError(w, err)
 			return
 		}
