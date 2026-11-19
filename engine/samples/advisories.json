@@ -1,0 +1,43 @@
+[
+  {
+    "id": "DVS-2026-0001",
+    "component": "fernhttpd",
+    "introduced": "1.2",
+    "fixed": "1.10",
+    "severity": "high"
+  },
+  {
+    "id": "DVS-2026-0002",
+    "component": "linkcfgd",
+    "introduced": "2.0.0",
+    "severity": "medium"
+  },
+  {
+    "id": "DVS-2026-0003",
+    "component": "bootwarden",
+    "introduced": null,
+    "fixed": "0.9.0",
+    "severity": "critical"
+  },
+  {
+    "id": "DVS-2026-0004",
+    "component": "UPnP-Relay",
+    "introduced": "3.0",
+    "fixed": "3.1",
+    "severity": "low"
+  },
+  {
+    "id": "DVS-2026-0005",
+    "component": "rtsp-courier",
+    "introduced": "2.0",
+    "fixed": "2.2",
+    "severity": "high"
+  },
+  {
+    "id": "DVS-2026-0006",
+    "component": "libcrypt-lite",
+    "introduced": "1.0",
+    "fixed": "1.2",
+    "severity": "medium"
+  }
+]
